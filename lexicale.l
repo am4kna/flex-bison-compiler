@@ -14,10 +14,11 @@ extern YYSTYPE yylval;
 
 lettre_maj      [A-Z]
 lettre_min      [a-z]
-chiffre     [0-9]
-idf         {lettre_maj}({lettre_min}|{lettre_maj}|{chiffre})*
-entier      -\({chiffre}+\) |{chiffre}+ 
-reel        -\({chiffre}+"."{chiffre}+\) |{chiffre}+"."{chiffre}+
+chiffre         [0-9]
+idf         ({lettre_maj})({lettre_min}|{lettre_maj}|{chiffre})*
+entier      -?{chiffre}+
+
+reel        -?{chiffre}+"."{chiffre}+
 chaine      \"([^\"\n]|\\.)*\"
 character   \'([^\'\n]|\\.)\'
 cnst        ({entier})
@@ -48,15 +49,15 @@ comment     "§"[^\n]*
 "-"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return sous; }
 "*"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return mul; }
 "/"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return division; }
-"AND"       {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return et; }
-"OR"        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return ou; }
-"NOT"       {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return non; }
-"G"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return sup; }
-"L"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return inf; }
-"GE"        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return supeg; }
-"LE"        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return infeg; }
-"DI"        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return diff; }
-"EQ"        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return egal; }
+".AND."       {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return et; }
+".OR."        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return ou; }
+".NOT."       {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return non; }
+".G."         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return sup; }
+".L."         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return inf; }
+".GE."        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return supeg; }
+".LE."        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return infeg; }
+".DI."        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return diff; }
+".EQ."        {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return egal; }
 "("         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return par_ouvrante; }
 ")"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return par_fermante; }
 "["         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return croch_ouvrant; }
