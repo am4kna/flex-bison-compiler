@@ -5,8 +5,8 @@
 #include "syntaxique.tab.h"
 #include "symbol_table.c"
 
-int nb_ligne = 1;
-int col = 1;
+extern int nb_ligne ;
+extern int col ;
 extern YYSTYPE yylval;
 %}
 
@@ -15,10 +15,9 @@ extern YYSTYPE yylval;
 lettre_maj      [A-Z]
 lettre_min      [a-z]
 chiffre     [0-9]
-idf         ({lettre_maj}|{lettre_min})({lettre_min}|{lettre_maj}|{chiffre})*
-entier      -?{chiffre}+
-
-reel        -?{chiffre}+"."{chiffre}+
+idf         {lettre_maj}({lettre_min}|{lettre_maj}|{chiffre})*
+entier      -\({chiffre}+\) |{chiffre}+ 
+reel        -\({chiffre}+"."{chiffre}+\) |{chiffre}+"."{chiffre}+
 chaine      \"([^\"\n]|\\.)*\"
 character   \'([^\'\n]|\\.)\'
 cnst        ({entier})

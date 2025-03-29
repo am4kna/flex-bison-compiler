@@ -5,6 +5,7 @@
     #include "symbol_table.h"
     int yylex(); 
     int yyerror(const char* msg);  
+    int nb_ligne = 1, col = 1;
 %}
 
 %union {
@@ -30,11 +31,11 @@
 %left add sous
 %left mul division
 %right affectation
-%precedence mc_else
+%right mc_else
 
 %%
 
-programme : mc_data section_data mc_code section_code mc_end { printf("Syntax is correct.\n"); };
+programme : identificateur mc_data section_data mc_end mc_code section_code mc_end mc_end { printf("Syntax is correct.\n"); };
 
 section_data : declarations |  ;
 
@@ -43,36 +44,40 @@ section_code : instructions |  ;
 /* --- Declarations --- */
 declarations : declarations declaration | declaration ;
 
-declaration : mc_const identificateur affectation valeur point_virgule
-            | type liste_identificateurs point_virgule
-            | mc_vector identificateur croch_ouvrant entier virgule entier deux_points type  croch_fermant point_virgule ;
+declaration : mc_const deux_points identificateur affectation valeur point_virgule
+            | type deux_points liste_identificateurs point_virgule
+            | mc_vector deux_points identificateur croch_ouvrant entier virgule entier deux_points type  croch_fermant point_virgule ;
             
 liste_identificateurs : identificateur 
-                      | liste_identificateurs virgule identificateur ;
+                      | liste_identificateurs barre_verticale identificateur ;
 
 type : mc_integer | mc_float | mc_character | mc_string ;
 
 /* --- Instructions --- */
 instructions : instructions instruction | instruction ;
 
-instruction : mc_read par_ouvrante guillemet_ouvrant chaine guillemet_fermant deux_points arobase identificateur par_fermante point_virgule
-            | mc_display par_ouvrante guillemet_ouvrant chaine guillemet_fermant deux_points identificateur par_fermante point_virgule
+instruction : mc_read par_ouvrante guillemet_ouvrant signe_de_formatiage guillemet_fermant deux_points arobase identificateur par_fermante point_virgule
+            | mc_display par_ouvrante guillemet_ouvrant chaine signe_de_formatiage guillemet_fermant deux_points identificateur par_fermante point_virgule
             | mc_if par_ouvrante condition par_fermante instructions mc_end
             | mc_if par_ouvrante condition par_fermante instructions mc_else instructions mc_end
             | mc_for par_ouvrante identificateur deux_points entier deux_points condition par_fermante instructions mc_endfor
             | identificateur affectation expr point_virgule ;
-
+signe_de_formatiage : idf_float | idf_string | idf_char | idf_entier ;
+                
 /* --- Conditions --- */
-condition : expr egal expr
-          | expr diff expr
-          | expr sup expr
-          | expr inf expr
-          | expr supeg expr
-          | expr infeg expr
-          | non expr
-          | condition et condition
-          | condition ou condition ;
+condition : condition_et
+          | condition ou condition_et ;
 
+condition_et : condition_base
+             | condition_et et condition_base ;
+
+condition_base : expr egal expr
+               | expr diff expr
+               | expr sup expr
+               | expr inf expr
+               | expr supeg expr
+               | expr infeg expr
+               | non condition_base ;
 /* --- Expressions --- */
 expr : identificateur
      | entier
