@@ -37,6 +37,7 @@ comment     "§"[^\n]*
 "READ"      {inserer(yytext, "mc"); yylval.strVal = strdup(yytext); col += yyleng; return mc_read; }
 "DISPLAY"   {inserer(yytext, "mc"); yylval.strVal = strdup(yytext); col += yyleng; return mc_display; }
 "IF"        {inserer(yytext, "mc"); yylval.strVal = strdup(yytext); col += yyleng; return mc_if; }
+
 "ELSE"      {inserer(yytext, "mc"); yylval.strVal = strdup(yytext); col += yyleng; return mc_else; }
 "FOR"       {inserer(yytext, "mc"); yylval.strVal = strdup(yytext); col += yyleng; return mc_for; }
 

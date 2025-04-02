@@ -1,4 +1,4 @@
-Mabc9
+PHYLOG
 DATA 
 INTEGER: A|B ; 
 END
