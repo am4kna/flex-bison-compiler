@@ -9,32 +9,30 @@ TableSymboles tableSymboles;
      
 
 // initialisation
-void initialiserTable() {
+void initialiser() {
     tableSymboles.capacite = 100;  
     tableSymboles.taille = 0;     
     tableSymboles.entrees = malloc(tableSymboles.capacite * sizeof(EntreeSymbole));
 }
 
-void inserer(const char *type, const char *nom) {
-    // Vérifier si la table doit être agrandie
+void inserer(const char *nom, const char *type) {
+    
     if (tableSymboles.taille >= tableSymboles.capacite) {
         tableSymboles.capacite *= 2;
-        tableSymboles.entrees = realloc(tableSymboles.entrees, 
+        tableSymboles.entrees = realloc(tableSymboles.entrees,
                                         tableSymboles.capacite * sizeof(EntreeSymbole));
     }
 
-    // ajout
-    tableSymboles.entrees[tableSymboles.taille] = (EntreeSymbole){
-        .nom = strdup(nom),
-        .type = strdup(type),
-        .ligne = nb_ligne,  
-        .colonne = col 
-    };
-    tableSymboles.taille++; 
+    tableSymboles.entrees[tableSymboles.taille].nom = strdup(nom);
+    tableSymboles.entrees[tableSymboles.taille].type = strdup(type);
+    tableSymboles.entrees[tableSymboles.taille].ligne = nb_ligne;
+    tableSymboles.entrees[tableSymboles.taille].colonne = col;
+    tableSymboles.taille++;
 }
 
+
 // liberation
-void liberere() {
+void liberer() {
     for (int i = 0; i < tableSymboles.taille; i++) {
         free(tableSymboles.entrees[i].nom);
         free(tableSymboles.entrees[i].type);

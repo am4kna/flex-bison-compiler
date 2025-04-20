@@ -1,6 +1,8 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
+#include "symbol_table.h"  
+
 
 int nb_ligne= 1, col=1;
 void yyerror(const char *s);
@@ -17,7 +19,7 @@ int yylex();
 %token <strVal> deux_points affectation point_virgule virgule barre_verticale
 %token <strVal> add sous mul division et ou non sup inf supeg infeg diff egal
 %token <strVal> par_ouvrante par_fermante croch_ouvrant croch_fermant
-%token <strVal> arobase
+%token <strVal> arobase guillemet_fermant guillemet_ouvrant
 /* guillemet_ouvrant guillemet_fermant  */
 %token <strVal> idf_entier idf_float idf_string idf_char
 %token <strVal> identificateur entier character 
@@ -48,7 +50,8 @@ declarations:
 declaration:
       type deux_points liste_identificateurs point_virgule
     | mc_const deux_points identificateur affectation valeur point_virgule
-    | mc_vector deux_points identificateur croch_ouvrant entier virgule entier deux_points type croch_fermant point_virgule
+    | mc_const deux_points identificateur affectation guillemet_ouvrant valeur guillemet_fermant point_virgule
+    | mc_vector deux_points identificateur croch_ouvrant cnst virgule cnst deux_points type croch_fermant point_virgule
     ;
 
 liste_identificateurs:
@@ -89,15 +92,19 @@ affectations:
     ;
 expression:
       cnst
+    | valeur
     | identificateur
     | identificateur op_arithmetique cnst
+    | identificateur op_arithmetique reel
     | identificateur op_arithmetique identificateur
+    | par_ouvrante expression par_fermante
+
     ;
 op_arithmetique:
     add
-    sous
-    mul
-    division
+  | sous
+  | mul
+  | division
     ;
 
 op_logique:
@@ -111,29 +118,23 @@ op_logique:
     | op_logique deux_points expression 
     ; */
 
-/* signe_de_formatiage:
-      idf_entier
-    | idf_float
-    | idf_char
-    | idf_string
-    ; */
 
 io_read:
-      mc_read par_ouvrante format deux_points arobase identificateur par_fermante point_virgule
+      mc_read par_ouvrante guillemet_ouvrant signe_de_formatiage guillemet_fermant deux_points arobase identificateur par_fermante point_virgule
       { printf("Read Instruction\n"); }
     ;
 
 io_display:
-      mc_display par_ouvrante chaine  deux_points identificateur par_fermante point_virgule
+      mc_display par_ouvrante  chaine  deux_points identificateur par_fermante point_virgule
       { printf("Display Instruction\n"); }
     ;
 
-format:
+signe_de_formatiage:
       idf_entier
     | idf_float
-    | idf_string
     | idf_char
-    ;
+    | idf_string
+    ; 
 
 if_else:
       mc_if par_ouvrante condition par_fermante deux_points instructions mc_else deux_points instructions mc_end
@@ -156,7 +157,7 @@ op_comparaison:
     ;
 
 boucle:
-      mc_for par_ouvrante identificateur deux_points mc_integer deux_points identificateur par_ouvrante instructions mc_end
+      mc_for par_ouvrante identificateur deux_points cnst deux_points identificateur par_fermante instructions mc_end
       { printf("FOR Loop parsed\n"); }
     ;
 
@@ -167,6 +168,12 @@ void yyerror(const char *s) {
 }
 
 int main() {
+ 
+    initialiser(); 
     yyparse();
+    afficher();          
+    liberer();          
     return 0;
+
+ 
 }

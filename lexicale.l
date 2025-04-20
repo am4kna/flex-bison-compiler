@@ -15,11 +15,11 @@ extern YYSTYPE yylval;
 lettre_maj      [A-Z]
 lettre_min      [a-z]
 chiffre         [0-9]
+chaine      \"([^\"\n]|\\.)*\"
 idf         ({lettre_maj})({lettre_min}|{lettre_maj}|{chiffre})*
 entier      -?{chiffre}+
 
 reel        -?{chiffre}+"."{chiffre}+
-chaine      \"([^\"\n]|\\.)*\"
 character   \'([^\'\n]|\\.)\'
 cnst        ({entier})
 comment     "§"[^\n]*
@@ -66,11 +66,19 @@ comment     "§"[^\n]*
 "“"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return guillemet_ouvrant; }
 "”"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return guillemet_fermant; }
 "@"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return arobase; }
-"§"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return idf_entier; }
+"$"        { inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return idf_entier; }
 "%"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return idf_float; }
 "#"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return idf_string; }
 "&"         {inserer(yytext, "sep"); yylval.strVal = strdup(yytext); col += yyleng; return idf_char; }
 
+{chaine}    {
+            printf("Matched chaine: %s\n", yytext);  // <== Add this line
+ 
+             inserer(yytext, "chaine"); 
+             col += yyleng; 
+             yylval.strVal = strdup(yytext); //changed yylval.chaine to strVal cause i noticed rahi deja nommee strVal dans ce doc
+             return chaine;
+         }
 
 {idf} {
     printf("Lexing identifier: %s at line %d, column %d\n", yytext, nb_ligne, col);
@@ -88,12 +96,7 @@ comment     "§"[^\n]*
              return reel;
          }
 
-{chaine}    {
-             inserer(yytext, "chaine"); 
-             col += yyleng; 
-             yylval.strVal = strdup(yytext); //changed yylval.chaine to strVal cause i noticed rahi deja nommee strVal dans ce doc
-             return chaine;
-         }
+
 
 {character} {
              inserer(yytext, "character"); 
@@ -111,13 +114,13 @@ comment     "§"[^\n]*
 
 
 
-[ \t]+      { printf("ignoring"); col += yyleng; }  /* Ignorer les espaces et tabulations */
+[ \t]+      { col += yyleng; }  /* Ignorer les espaces et tabulations */
 
 {comment}   { printf("commentaire sur 1 seule ligne: %d\n", nb_ligne); }
-\n          { nb_ligne++; col = 1; }  /* Compter les lignes et réinitialiser la colonne */
+\n          { nb_ligne++; col = 1; }  
 . { 
     fprintf(stderr, "Erreur lexicale à la ligne %d, colonne %d: caractère inconnu '%s'\n", nb_ligne, col, yytext); 
-    exit(1);  // Stop execution immediately
+    exit(1);  
 }
 
 %%
