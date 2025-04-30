@@ -2,10 +2,7 @@
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
-typedef enum {
-    TYPE_INTEGER, TYPE_FLOAT, TYPE_CHAR, TYPE_STRING, TYPE_BOOL,
-    mc, sep, constante, TYPE_UNKNOWN, idf
-} DataType;
+#include "types.h"
 
 typedef struct EntreeSymbole {
     char *nom;
@@ -15,6 +12,7 @@ typedef struct EntreeSymbole {
     int colonne;
     int is_const;
     int array_size;
+    int est_initialise;
     struct EntreeSymbole *suivant; // Pour le chaînage
 } EntreeSymbole;
 
@@ -25,6 +23,9 @@ typedef struct {
 
 extern TableSymboles tableSymboles;
 extern int nb_ligne, col;
+
+void set_initialized(char *nom);
+int is_initialized(char *nom);
 
 void initialiser();
 void inserer(const char *nom, DataType type, int is_const, int array_size);

@@ -16,6 +16,33 @@ void check_declaration(const char *id, int line, int colonne) {
    
 }
 
+// Function to check if a variable is initialized before use
+void check_initialization(char *nom, int ligne, int colonne) {
+    EntreeSymbole *sym = get_symbol(nom);
+    if (sym == NULL) return; // Not declared, handled elsewhere?
+
+    // Skip check for constants
+    if (sym->is_const) return;
+
+    // Skip check for arrays
+    if (sym->array_size > 0) return;
+
+    if (!sym->est_initialise) {
+        fprintf(stderr, "Erreur sémantique (ligne %d)(colonne %d): Variable '%s' utilisée avant initialisation\n", 
+                ligne, colonne, nom);
+        // exit(EXIT_FAILURE); // Optional: uncomment to stop on error
+    }
+}
+
+// Helper function to check if symbol is constant
+int is_const(char *nom) {
+    EntreeSymbole *sym = get_symbol(nom);
+    if (sym != NULL) {
+        return sym->is_const;
+    }
+    return 0;
+}
+
 void check_duplicate_symbol(const char *id, int line, int colonne) {
     if (symbol_exists(id)>1) {
         fprintf(stderr, "Erreur sémantique (ligne %d)(colonne %d): '%s' déjà déclaré\n", line,colonne, id);
@@ -69,7 +96,7 @@ void check_read_format(const char *format, DataType var_type, int line, int colo
 format_error:
     fprintf(stderr, "Erreur sémantique (ligne %d) (colonne %d): Format '%s' incompatible avec le type %d\n", 
             line,colonne, format, var_type);
-    exit(EXIT_FAILURE);
+    // exit(EXIT_FAILURE);
 }
 // Vérifie le format DISPLAY
 void check_display_format(const char *format, DataType var_type, int line, int colonne) {

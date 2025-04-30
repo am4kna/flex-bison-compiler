@@ -3,7 +3,8 @@
 
 #include "symbol_table.h"
 
-
+void check_initialization(char *nom, int ligne, int colonne);
+int is_const(char *nom);
 void check_declaration(const char *id, int line, int colonne);
 void check_duplicate_symbol(const char *id, int line, int colonne);
 void check_const_assignment(const char *id, int line , int colonne);

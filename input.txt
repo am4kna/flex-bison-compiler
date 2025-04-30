@@ -1,33 +1,27 @@
 MyProgram
 DATA
-INTEGER: A | B | C  ;
+INTEGER: A | B | C ;
 FLOAT: X| Y ;
 CHAR: Z ;
 STRING: S ;
 CONST: PI = 3.14 ;
+CONST: P = 3.3 ;
+
+
 CONST: MSG = "Hello World" ;
 VECTOR: T[10, 15 : INTEGER] ;
 END
 CODE
-READ (“$”: @A) ;
-READ (“%”: @X) ;
-DISPLAY ("Valeur de A est $": A) ;
-DISPLAY ("Valeur de X est %": X) ;
-A = B / 2 ;
-X = (Y - 2.5) ;
-S = "Test string" ;
-Z = 'z' ;
 
-IF (A.GE.B):
-    DISPLAY ("A est supérieur à B $": A) ;
-ELSE:
-    DISPLAY ("A est inférieur ou égal à B $": A) ;
-END
 
-FOR (C : 1 : B)
-    READ (“$”: @C) ;
-    DISPLAY ("Valeur actuelle $": C) ;
-END
+IF (X.GE.Y):
+    DISPLAY ("A e B $": A) ;
+    ELSE: 
+       DISPLAY ("la  A est  $": A);
+    END
+DISPLAY ("Val $": A) ;
+DISPLAY ("Va %": X) ;
+Y = Y+1;
 
 END
 END

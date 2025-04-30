@@ -8,6 +8,10 @@
 
 TableSymboles tableSymboles;
 
+extern int nb_ligne;
+extern int col;
+
+
 
 // === Fonction de hachage simple (djb2) ===
 unsigned int hash(const char *str) {
@@ -48,6 +52,26 @@ void initialiser() {
     tableSymboles.table = calloc(tableSymboles.capacite, sizeof(EntreeSymbole*));
 }
 
+// Set a variable as initialized
+void set_initialized(char *nom) {
+    EntreeSymbole *sym = get_symbol(nom);
+    if (sym != NULL) {
+        sym->est_initialise = 1;
+    }
+}
+
+// Check if a variable is initialized
+int is_initialized(char *nom) {
+    EntreeSymbole *sym = get_symbol(nom);
+    if (sym != NULL) {
+        return sym->est_initialise;
+    }
+    return 0;  // Not found or not initialized
+}
+
+
+
+
 // === Insertion dans la table ===
 void inserer(const char *nom, DataType type, int is_const, int array_size) {
     unsigned int index = hash(nom);
@@ -60,6 +84,7 @@ void inserer(const char *nom, DataType type, int is_const, int array_size) {
     nouveau->colonne = col;
     nouveau->is_const = is_const;
     nouveau->array_size = array_size;
+    nouveau->est_initialise = 0;
     nouveau->suivant = tableSymboles.table[index]; // Chaine sur l'existant
     tableSymboles.table[index] = nouveau;
 }

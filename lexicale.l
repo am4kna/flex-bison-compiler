@@ -123,7 +123,7 @@ comment     "§"[^\n]*
 \n          { nb_ligne++; col = 1; }  
 . { 
     fprintf(stderr, "Erreur lexicale à la ligne %d, colonne %d: caractère inconnu '%s'\n", nb_ligne, col, yytext); 
-    exit(1);  
+    // exit(1);  
 }
 
 %%
