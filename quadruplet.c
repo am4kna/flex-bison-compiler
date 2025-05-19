@@ -3,6 +3,8 @@
 QuadrupletTable quad_table;
 int temp_var_count = 0;
 int label_count = 0;
+// quadruplet.c
+QuadrupletTable quadList;
 
 void quad_init() {
     quad_table.capacity = 100;  

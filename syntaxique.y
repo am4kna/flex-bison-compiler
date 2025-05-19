@@ -7,6 +7,9 @@
 #include <string.h>
 #include "types.h"        
 
+#include "optimisation.h"
+#include "assembleur.h"
+
 int nb_ligne= 1, col=1;
 void yyerror(const char *s);
 int yylex();
@@ -592,9 +595,19 @@ void yyerror(const char *s) {
     printf("Syntax Error at line %d, column %d: %s\n", nb_ligne, col, s);
 }
 
+/* Main function in syntaxic.y */
 int main() {
     initialiser(); 
     yyparse();
+    
+    printf("\n===== BEFORE OPTIMIZATION =====\n");
+    quad_print(&quadList);
+    
+    optimizeCode(&quadList);
+    
+    printf("\n===== AFTER OPTIMIZATION =====\n");
+    quad_print(&quadList);
+
     afficher();          
     liberer();          
     return 0;

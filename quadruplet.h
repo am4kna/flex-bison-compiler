@@ -45,8 +45,9 @@ typedef struct {
 // Structure to manage quadruplets
 typedef struct {
     Quadruplet* quadruplets;  // Array of quadruplets
-    int count;                // Number of quadruplets
     int capacity;             // Capacity of the array
+    int count;                // Number of quadruplets
+
 } QuadrupletTable;
 // Additional fields for expression attributes
 
@@ -54,6 +55,8 @@ typedef struct {
 // Temporary variable management
 extern int temp_var_count;
 extern int label_count;
+extern QuadrupletTable quadList;
+
 
 void quad_init();
 void quad_free();
