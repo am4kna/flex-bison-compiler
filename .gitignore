@@ -21,8 +21,4 @@ bin/
 Thumbs.db
 
 *.log
-assembleur.c
-assembleur.h
-registres.h
-registres.c
 output.asm

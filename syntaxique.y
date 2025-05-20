@@ -601,13 +601,16 @@ int main() {
     yyparse();
     
     printf("\n===== BEFORE OPTIMIZATION =====\n");
-    quad_print(&quadList);
+    quad_print();
     
     optimizeCode(&quadList);
     
     printf("\n===== AFTER OPTIMIZATION =====\n");
-    quad_print(&quadList);
+    quad_print();
 
+    generateAssembly(&quadList, "output.asm");
+    printf("\n===== ASSEMBLY CODE GENERATED =====\n");
+    printf("Assembly code has been generated in output.asm\n");
     afficher();          
     liberer();          
     return 0;

@@ -1,4 +1,4 @@
 flex lexicale.l
 bison -d syntaxique.y
-gcc lex.yy.c syntaxique.tab.c symbol_table.c semantic.c optimisation.c quadruplet.c -o parser.exe
+gcc lex.yy.c syntaxique.tab.c symbol_table.c assembleur.c semantic.c optimisation.c quadruplet.c registres.c -o parser.exe
 parser.exe < input.txt
